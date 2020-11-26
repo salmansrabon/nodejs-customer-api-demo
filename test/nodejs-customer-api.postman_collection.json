@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "a0176e1b-7606-40b7-9174-4190e96f4eda",
+		"name": "nodejs-customer-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Customer List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/customer/api/v1/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"customer",
+						"api",
+						"v1",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/customer/api/v1/get/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"customer",
+						"api",
+						"v1",
+						"get",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "75ac43bd-e668-418d-8fcb-300fb7c4ccc0",
+						"exec": [
+							"pm.test(\"New Customer creation\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Success\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1e0ee902-4a27-4f1d-9e05-2fa77652a306",
+						"exec": [
+							"\r",
+							"let id=_.random(100000, 999999)\r",
+							"pm.environment.set(\"id\",id );\r",
+							"const reqObject = {\r",
+							"  url: 'https://api.namefake.com/english-united-states/male/',\r",
+							"  method: 'GET',\r",
+							"  header: 'Content-Type:application/json'\r",
+							"};\r",
+							"\r",
+							"pm.sendRequest(reqObject, (err, res) => {\r",
+							"    let {name} = res.json()\r",
+							"    let {phone_w}=res.json()\r",
+							"    let {email_u} = res.json()\r",
+							"    let email=email_u+'@testmail.com'\r",
+							"    \r",
+							"    pm.environment.set(\"name\", name);\r",
+							"    pm.environment.set(\"email\", email);\r",
+							"    pm.environment.set(\"phone_number\", phone_w);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{id}},\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"address\": \"USA\",\r\n    \"phone_number\":\"{{phone_number}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/customer/api/v1/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"customer",
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Customer",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{id}},\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"address\": \"UK\",\r\n    \"phone_number\":\"{{phone_number}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/customer/api/v1/update/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"customer",
+						"api",
+						"v1",
+						"update",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Customer",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/customer/api/v1/delete/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"customer",
+						"api",
+						"v1",
+						"delete",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "6115009c-dd76-4ecc-b14b-abf3379e004a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f54bd31a-2af7-4c76-afd9-a1361302a0e0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
