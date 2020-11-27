@@ -15,18 +15,39 @@ const data = fs.readFileSync(db); //Read data from data file
 const stats = JSON.parse(data); //To make data in json format
 
 router.get(apiRoute+'/list', function (req, res) {
-    res.status(200).json(stats);
+    var count =Object.keys(stats).length;
+    res.json({
+        Count:count,
+        Customers:stats
+    });
 });
 
 router.get(apiRoute+'/get/:id', (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.id === Number(req.params.id));
+        console.log(customerStats);
         if (!customerStats) {
             const err = new Error('Customer info not found');
             err.status = 404;
             throw err;
         }
         res.json(customerStats);
+        
+    } catch (e) {
+        next(e);
+    }
+});
+router.post(apiRoute+'/find', (req, res, next) => {
+    try {
+        const customerStats = stats.find(customer => customer.email === String(req.body.email));
+        console.log(customerStats);
+        if (!customerStats) {
+            const err = new Error('Customer info not found');
+            err.status = 404;
+            throw err;
+        }
+        res.json(customerStats);
+        
     } catch (e) {
         next(e);
     }
@@ -123,4 +144,30 @@ router.delete(apiRoute+'/delete/:id', (req, res, next) => {
     }
 });
 
+router.post(apiRoute+'/login', (req, res, next) => {
+    try {
+        const customerStats = stats.find(customer => customer.email === String(req.body.email));
+        const token=req.headers.authorization;
+        if(!customerStats){
+                const err = new Error('Invalid email address');
+                err.status = 404;
+                throw err;
+        }
+        else{
+            if(token==="4321" && customerStats.email===String(req.body.email)){
+                res.json(customerStats);
+            }
+            else{
+                const err = new Error('Token is invalid');
+                err.status = 404;
+                throw err;
+            }
+        }
+        
+        
+        
+    } catch (e) {
+        next(e);
+    }
+});
 module.exports=router;
