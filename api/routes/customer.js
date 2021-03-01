@@ -12,17 +12,17 @@ router.get('/', (req, res, next) => {
 });
 const apiRoute = "/api/v1";
 
-const db = path.join(__dirname, './data.json'); //Locate the data file
-const data = fs.readFileSync(db); //Read data from data file
-const stats = JSON.parse(data); //To make data in json format
+const customerdb = path.join(__dirname, './db/data.json'); //Locate the data file
+const customerInfo = fs.readFileSync(customerdb); //Read data from data file
+const stats = JSON.parse(customerInfo); //To make data in json format
 
-const userdb = path.join(__dirname, './user.json'); //Locate the data file
+const userdb = path.join(__dirname, './db/user.json'); //Locate the data file
 const userdata = fs.readFileSync(userdb); //Read data from data file
 const users = JSON.parse(userdata); //To make data in json format
 
 
 router.get(apiRoute + '/list', authenticateJWT, function (req, res) {
-    const data = fs.readFileSync(db); //Read data from data file
+    const data = fs.readFileSync(customerdb); //Read data from data file
     const stats = JSON.parse(data); //To make data in json format
     var count = Object.keys(stats).length;
 
@@ -35,7 +35,7 @@ router.get(apiRoute + '/list', authenticateJWT, function (req, res) {
 
 router.get(apiRoute + '/get/:id', authenticateJWT, (req, res, next) => {
     try {
-        const data = fs.readFileSync(db); //Read data from data file
+        const data = fs.readFileSync(customerdb); //Read data from data file
         const stats = JSON.parse(data); //To make data in json format
         const customerStats = stats.find(customer => customer.id === Number(req.params.id));
         console.log(customerStats);
@@ -50,7 +50,7 @@ router.get(apiRoute + '/get/:id', authenticateJWT, (req, res, next) => {
         next(e);
     }
 });
-router.post(apiRoute + '/find',authenticateJWT, (req, res, next) => {
+router.post(apiRoute + '/find', authenticateJWT, (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.email === String(req.body.email));
         console.log(customerStats);
@@ -66,7 +66,7 @@ router.post(apiRoute + '/find',authenticateJWT, (req, res, next) => {
     }
 });
 
-router.post(apiRoute + '/create',authenticateJWT, (req, res, next) => {
+router.post(apiRoute + '/create', authenticateJWT, (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.id === Number(req.body.id));
         if (!customerStats) {
@@ -78,7 +78,7 @@ router.post(apiRoute + '/create',authenticateJWT, (req, res, next) => {
                 phone_number: req.body.phone_number,
             };
             stats.push(newStats);
-            fs.writeFileSync(db, JSON.stringify(stats));
+            fs.writeFileSync(customerdb, JSON.stringify(stats));
             res.status(201).json({
                 message: "Success",
                 Customers: newStats
@@ -95,7 +95,7 @@ router.post(apiRoute + '/create',authenticateJWT, (req, res, next) => {
         next(e);
     }
 });
-router.put(apiRoute + '/update/:id',authenticateJWT, (req, res, next) => {
+router.put(apiRoute + '/update/:id', authenticateJWT, (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.id === Number(req.params.id));
         if (!customerStats) {
@@ -117,7 +117,7 @@ router.put(apiRoute + '/update/:id',authenticateJWT, (req, res, next) => {
                 return customer;
             }
         });
-        fs.writeFileSync(db, JSON.stringify(newStats));
+        fs.writeFileSync(customerdb, JSON.stringify(newStats));
         res.status(200).json({
             message: "Success",
             Customers: newStatsData
@@ -129,7 +129,7 @@ router.put(apiRoute + '/update/:id',authenticateJWT, (req, res, next) => {
 
 });
 
-router.delete(apiRoute + '/delete/:id',authenticateJWT, (req, res, next) => {
+router.delete(apiRoute + '/delete/:id', authenticateJWT, (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.id === Number(req.params.id));
         if (!customerStats) {
@@ -145,7 +145,7 @@ router.delete(apiRoute + '/delete/:id',authenticateJWT, (req, res, next) => {
             }
         })
             .filter(customer => customer !== null);
-        fs.writeFileSync(db, JSON.stringify(newStats));
+        fs.writeFileSync(customerdb, JSON.stringify(newStats));
         res.status(200).json({
             message: 'Customer deleted!'
         })
