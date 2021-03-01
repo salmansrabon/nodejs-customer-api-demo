@@ -25,7 +25,6 @@ router.get(apiRoute + '/list', authenticateJWT, function (req, res) {
     const data = fs.readFileSync(db); //Read data from data file
     const stats = JSON.parse(data); //To make data in json format
     var count = Object.keys(stats).length;
-    const token = req.headers.authorization;
 
     res.json({
         Count: count,
