@@ -1,29 +1,33 @@
-const express=require('express');
+const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 
-router.get('/',(req,res,next)=>{
+router.get('/', (req, res, next) => {
     res.status(200).json({
-        message:"Server is up"
+        message: "Server is up"
     });
 });
-const apiRoute="/api/v1";
+const apiRoute = "/api/v1";
 
-const db=path.join(__dirname, './data.json'); //Locate the data file
+const db = path.join(__dirname, './data.json'); //Locate the data file
 const data = fs.readFileSync(db); //Read data from data file
 const stats = JSON.parse(data); //To make data in json format
 
-router.get(apiRoute+'/list', function (req, res) {
-    var count =Object.keys(stats).length;
+router.get(apiRoute + '/list', function (req, res) {
+    const data = fs.readFileSync(db); //Read data from data file
+    const stats = JSON.parse(data); //To make data in json format
+    var count = Object.keys(stats).length;
     res.json({
-        Count:count,
-        Customers:stats
+        Count: count,
+        Customers: stats
     });
 });
 
-router.get(apiRoute+'/get/:id', (req, res, next) => {
+router.get(apiRoute + '/get/:id', (req, res, next) => {
     try {
+        const data = fs.readFileSync(db); //Read data from data file
+        const stats = JSON.parse(data); //To make data in json format
         const customerStats = stats.find(customer => customer.id === Number(req.params.id));
         console.log(customerStats);
         if (!customerStats) {
@@ -32,12 +36,12 @@ router.get(apiRoute+'/get/:id', (req, res, next) => {
             throw err;
         }
         res.json(customerStats);
-        
+
     } catch (e) {
         next(e);
     }
 });
-router.post(apiRoute+'/find', (req, res, next) => {
+router.post(apiRoute + '/find', (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.email === String(req.body.email));
         console.log(customerStats);
@@ -47,13 +51,13 @@ router.post(apiRoute+'/find', (req, res, next) => {
             throw err;
         }
         res.json(customerStats);
-        
+
     } catch (e) {
         next(e);
     }
 });
 
-router.post(apiRoute+'/create', (req, res, next) => {
+router.post(apiRoute + '/create', (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.id === Number(req.body.id));
         if (!customerStats) {
@@ -67,29 +71,28 @@ router.post(apiRoute+'/create', (req, res, next) => {
             stats.push(newStats);
             fs.writeFileSync(db, JSON.stringify(stats));
             res.status(201).json({
-                message:"Success",
-                Customers:newStats
+                message: "Success",
+                Customers: newStats
             });
-            
+
         }
-        else{
+        else {
             const err = new Error('Customer already exists');
             err.status = 200;
             throw err;
         }
-    } 
-    catch (e) 
-    {
+    }
+    catch (e) {
         next(e);
     }
 });
-router.put(apiRoute+'/update/:id', (req, res, next) => {
+router.put(apiRoute + '/update/:id', (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.id === Number(req.params.id));
         if (!customerStats) {
-        const err = new Error('Customer data not found');
-        err.status = 404;
-        throw err;
+            const err = new Error('Customer data not found');
+            err.status = 404;
+            throw err;
         }
         const newStatsData = {
             id: req.body.id,
@@ -107,24 +110,23 @@ router.put(apiRoute+'/update/:id', (req, res, next) => {
         });
         fs.writeFileSync(db, JSON.stringify(newStats));
         res.status(200).json({
-            message:"Success",
-            Customers:newStatsData
+            message: "Success",
+            Customers: newStatsData
         });
-    } 
-    catch (e) 
-    {
+    }
+    catch (e) {
         next(e);
     }
 
 });
 
-router.delete(apiRoute+'/delete/:id', (req, res, next) => {
+router.delete(apiRoute + '/delete/:id', (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.id === Number(req.params.id));
         if (!customerStats) {
-        const err = new Error('Customer not found');
-        err.status = 404;
-        throw err;
+            const err = new Error('Customer not found');
+            err.status = 404;
+            throw err;
         }
         const newStats = stats.map(customer => {
             if (customer.id === Number(req.params.id)) {
@@ -133,41 +135,41 @@ router.delete(apiRoute+'/delete/:id', (req, res, next) => {
                 return customer;
             }
         })
-        .filter(customer => customer !== null);
+            .filter(customer => customer !== null);
         fs.writeFileSync(db, JSON.stringify(newStats));
         res.status(200).json({
             message: 'Customer deleted!'
         })
-    } 
+    }
     catch (e) {
         next(e);
     }
 });
 
-router.post(apiRoute+'/login', (req, res, next) => {
+router.post(apiRoute + '/login', (req, res, next) => {
     try {
         const customerStats = stats.find(customer => customer.email === String(req.body.email));
-        const token=req.headers.authorization;
-        if(!customerStats){
-                const err = new Error('Invalid email address');
-                err.status = 404;
-                throw err;
+        const token = req.headers.authorization;
+        if (!customerStats) {
+            const err = new Error('Invalid email address');
+            err.status = 404;
+            throw err;
         }
-        else{
-            if(token==="4321" && customerStats.email===String(req.body.email)){
+        else {
+            if (token === "4321" && customerStats.email === String(req.body.email)) {
                 res.json(customerStats);
             }
-            else{
+            else {
                 const err = new Error('Token is invalid');
                 err.status = 404;
                 throw err;
             }
         }
-        
-        
-        
+
+
+
     } catch (e) {
         next(e);
     }
 });
-module.exports=router;
+module.exports = router;
