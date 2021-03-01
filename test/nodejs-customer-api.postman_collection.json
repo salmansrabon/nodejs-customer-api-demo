@@ -6,17 +6,79 @@
 	},
 	"item": [
 		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"let token=jsonData.accessToken\r",
+							"pm.environment.set(\"token\", token);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "4321",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"salman\",\r\n    \"password\":\"1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/customer/api/v1/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"customer",
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Customer List",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbG1hbiIsInJvbGUiOiJtZW1iZXIiLCJpYXQiOjE2MTQ2MTMyODMsImV4cCI6MTYxNDYxMzg4M30.USstCP4TyIH92_0ER0UyXQ_y8BEOBg2IPuwS-7BdQAo",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://localhost:3000/customer/api/v1/list",
-					"protocol": "http",
+					"raw": "{{url}}/customer/api/v1/list",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "3000",
 					"path": [
 						"customer",
 						"api",
@@ -31,14 +93,18 @@
 			"name": "Get Customer Info",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://localhost:3000/customer/api/v1/get/{{id}}",
-					"protocol": "http",
+					"raw": "{{url}}/customer/api/v1/get/{{id}}",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "3000",
 					"path": [
 						"customer",
 						"api",
@@ -51,12 +117,46 @@
 			"response": []
 		},
 		{
+			"name": "Get Customer Info by email",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"{{email}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/customer/api/v1/find",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"customer",
+						"api",
+						"v1",
+						"find"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create Customer",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "75ac43bd-e668-418d-8fcb-300fb7c4ccc0",
 						"exec": [
 							"pm.test(\"New Customer creation\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
@@ -69,9 +169,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "1e0ee902-4a27-4f1d-9e05-2fa77652a306",
 						"exec": [
-							"\r",
 							"let id=_.random(100000, 999999)\r",
 							"pm.environment.set(\"id\",id );\r",
 							"const reqObject = {\r",
@@ -98,7 +196,13 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"id\": {{id}},\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"address\": \"USA\",\r\n    \"phone_number\":\"{{phone_number}}\"\r\n}",
@@ -109,12 +213,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/customer/api/v1/create",
-					"protocol": "http",
+					"raw": "{{url}}/customer/api/v1/create",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "3000",
 					"path": [
 						"customer",
 						"api",
@@ -129,10 +231,16 @@
 			"name": "Update Customer",
 			"request": {
 				"method": "PUT",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": {{id}},\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"address\": \"UK\",\r\n    \"phone_number\":\"{{phone_number}}\"\r\n}",
+					"raw": "{\r\n    \"id\": {{id}},\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"address\": \"Ghana\",\r\n    \"phone_number\":\"{{phone_number}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -140,12 +248,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/customer/api/v1/update/{{id}}",
-					"protocol": "http",
+					"raw": "{{url}}/customer/api/v1/update/{{id}}",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "3000",
 					"path": [
 						"customer",
 						"api",
@@ -161,22 +267,41 @@
 			"name": "Delete Customer",
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://localhost:3000/customer/api/v1/delete/{{id}}",
-					"protocol": "http",
+					"raw": "{{url}}/customer/api/v1/delete/{{id}}?=",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "3000",
 					"path": [
 						"customer",
 						"api",
 						"v1",
 						"delete",
 						"{{id}}"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": ""
+						}
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "generate user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
 			},
 			"response": []
 		}
@@ -185,7 +310,6 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "6115009c-dd76-4ecc-b14b-abf3379e004a",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -195,13 +319,11 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "f54bd31a-2af7-4c76-afd9-a1361302a0e0",
 				"type": "text/javascript",
 				"exec": [
 					""
 				]
 			}
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
