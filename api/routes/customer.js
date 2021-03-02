@@ -87,7 +87,7 @@ router.post(apiRoute + '/create', authenticateJWT, (req, res, next) => {
         }
         else {
             const err = new Error('Customer already exists');
-            err.status = 200;
+            err.status = 208;
             throw err;
         }
     }
