@@ -19,7 +19,7 @@ const authenticateJWT = (req, res, next) => {
         });
     } else {
         const err = new Error('Unauthorized');
-        err.status = 404;
+        err.status = 401;
         throw err;
     }
 };

@@ -172,7 +172,7 @@ router.post(apiRoute + '/login', (req, res, next) => {
             });
         } else {
             const err = new Error('Username or password incorrect');
-            err.status = 404;
+            err.status = 401;
             throw err;
         }
 
