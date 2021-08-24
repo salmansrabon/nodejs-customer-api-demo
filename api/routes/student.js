@@ -11,12 +11,13 @@ router.get('/', (req, res, next) => {
 });
 const apiRoute = "/api/v1";
 
-router.get(apiRoute + '/list', function (req, res) {
-    const studentdb = path.join(__dirname, './db/student.json'); //Locate the data file
-    const studentdata = fs.readFileSync(studentdb); //Read data from data file
-    const students = JSON.parse(studentdata); //To make data in json format
-    var count = Object.keys(students).length;
+const studentdb = path.join(__dirname, './db/student.json'); //Locate the data file
+const studentdata = fs.readFileSync(studentdb); //Read data from data file
+const students = JSON.parse(studentdata); //To make data in json format
 
+router.get(apiRoute + '/list', function (req, res) {
+
+    var count = Object.keys(students).length;
     res.json({
         Count: count,
         Customers: students
@@ -25,9 +26,7 @@ router.get(apiRoute + '/list', function (req, res) {
 });
 
 router.get(apiRoute + '/email/:email', (req, res, next) => {
-    const studentdb = path.join(__dirname, './db/student.json'); //Locate the data file
-    const studentdata = fs.readFileSync(studentdb); //Read data from data file
-    const students = JSON.parse(studentdata); //To make data in json object
+
     try {
 
         const { email } = req.params;
@@ -48,7 +47,7 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
                 const end = 17 * 60 + 00;
                 const date = new Date();
                 const now = date.getHours() * 60 + date.getMinutes();
-                if(date.getDay()==3 || date.getDay()==6){
+                if (date.getDay() == 3 || date.getDay() == 6) {
                     if (start <= now && now <= end) {
                         students.push(newInfo);
                         fs.writeFileSync(studentdb, JSON.stringify(students));
@@ -59,11 +58,11 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
                     }
                     else {
                         res.status(200).json({
-                            message: ''+date+' This is not class time! You can give attendance from 07:50 PM'
+                            message: '' + date + ' This is not class time! You can give attendance from 07:50 PM'
                         })
                     }
                 }
-                else{
+                else {
                     res.status(200).json({
                         message: 'Today is not class day! Only Saturday and Wednesday is the scheduled class day'
                     })
