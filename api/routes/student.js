@@ -11,6 +11,18 @@ router.get('/', (req, res, next) => {
 });
 const apiRoute = "/api/v1";
 
+router.get(apiRoute + '/list', function (req, res) {
+    const studentdb = path.join(__dirname, './db/student.json'); //Locate the data file
+    const studentdata = fs.readFileSync(studentdb); //Read data from data file
+    const students = JSON.parse(studentdata); //To make data in json format
+    var count = Object.keys(students).length;
+
+    res.json({
+        Count: count,
+        Customers: students
+    });
+
+});
 
 router.get(apiRoute + '/email/:email', (req, res, next) => {
     const studentdb = path.join(__dirname, './db/student.json'); //Locate the data file
