@@ -7,7 +7,7 @@ exports.todaysDate = () => {
 }
 exports.attendanceTime = () => {
     var today = new Date();
-    var nowTime=today.setDate(today.getDate()+6);
+    var nowTime=today.setDate(today.getHours()+6);
     return dateformat(nowTime, "dd-mm-yyyy hh:MM:ss tt");
 
 }
