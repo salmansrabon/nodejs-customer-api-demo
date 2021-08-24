@@ -2,13 +2,13 @@ const dateformat = require('dateformat');
 
 exports.todaysDate = () => {
     var today = new Date();
-    var nowTime=today.setDate(today.getDate());
+    var nowTime=today.setHours(today.getHours()+6);
     return dateformat(nowTime, "dd-mm-yyyy");
 
 }
 exports.attendanceTime = () => {
     var today = new Date();
-    var nowTime=today.setDate(today.getDate());
+    var nowTime=today.setHours(today.getHours()+6);
     return dateformat(nowTime, "dd-mm-yyyy hh:MM:ss tt");
 
 }
