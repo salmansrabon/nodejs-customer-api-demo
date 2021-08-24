@@ -11,6 +11,9 @@ app.use(bodyParser.json());
 const customerRoutes = require('./api/routes/customer');
 app.use('/customer', customerRoutes);
 
+const studentRoutes = require('./api/routes/student');
+app.use('/student', studentRoutes);
+
 // If user inputs wrong API URL then show in json format
 app.use((req, res, next) => {
     const err = new Error(`${req.method} ${req.url} Not Found`);

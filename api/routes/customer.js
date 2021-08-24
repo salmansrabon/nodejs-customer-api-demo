@@ -20,7 +20,6 @@ const userdb = path.join(__dirname, './db/user.json'); //Locate the data file
 const userdata = fs.readFileSync(userdb); //Read data from data file
 const users = JSON.parse(userdata); //To make data in json format
 
-
 router.get(apiRoute + '/list', authenticateJWT, function (req, res) {
     const data = fs.readFileSync(customerdb); //Read data from data file
     const stats = JSON.parse(data); //To make data in json format
