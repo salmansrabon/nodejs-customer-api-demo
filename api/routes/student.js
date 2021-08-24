@@ -53,7 +53,7 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
                 }
                 else{
                     res.status(200).json({
-                        message: 'Today is not class day! Only Saturday and Wednesday is the scheduled class day'
+                        message: ''+date+'+ Today is not class day! Only Saturday and Wednesday is the scheduled class day'
                     })
                 }
 
