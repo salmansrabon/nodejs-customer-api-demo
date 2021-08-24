@@ -2,7 +2,8 @@ const dateformat = require('dateformat');
 
 exports.todaysDate = () => {
     var today = new Date();
-    return dateformat(today, "dd-mm-yyyy");
+    var nowTime=today.setDate(today.getHours()+6);
+    return dateformat(nowTime, "dd-mm-yyyy");
 
 }
 exports.attendanceTime = () => {
