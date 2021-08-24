@@ -20,7 +20,7 @@ router.get(apiRoute + '/list', function (req, res) {
     var count = Object.keys(students).length;
     res.json({
         Count: count,
-        Customers: students
+        Students: students
     });
 
 });
@@ -64,7 +64,7 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
                 }
                 else {
                     res.status(200).json({
-                        message: 'Today is not class day! Only Saturday and Wednesday is the scheduled class day'
+                        message: 'Today is not class day! Only Saturday and Wednesday are the scheduled class days'
                     })
                 }
 
