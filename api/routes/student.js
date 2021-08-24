@@ -47,7 +47,7 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
                     }
                     else {
                         res.status(200).json({
-                            message: ''+date+'+This is not class time! You can give attendance from 07:40 PM'
+                            message: ''+date+' This is not class time! You can give attendance from 07:50 PM'
                         })
                     }
                 }
