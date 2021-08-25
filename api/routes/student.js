@@ -46,7 +46,7 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
                 const start = 19 * 60 + 50;
                 const end = 22 * 60 + 00;
                 const date = new Date();
-                const now = date.getHours()+6 * 60 + date.getMinutes();
+                const now = (date.getHours()+6) * 60 + date.getMinutes();
                 if (date.getDay() == 3 || date.getDay() == 6) {
                     if (start <= now && now <= end) {
                         students.push(newInfo);
