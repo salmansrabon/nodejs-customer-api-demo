@@ -44,7 +44,7 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
         else {
             if (checkEmailIsValid(req.params.email)) {
                 const start = 19 * 60 + 50;
-                const end = 22 * 60 + 00;
+                const end = 23 * 59 + 00;
                 const date = new Date();
                 const now = (date.getHours()+6) * 60 + date.getMinutes();
                 if (date.getDay() == 3 || date.getDay() == 6) {
@@ -58,7 +58,7 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
                     }
                     else {
                         res.status(200).json({
-                            message: '' + attendanceTime() + ' This is not class time! You can give attendance from 07:50 PM'
+                            message: '' + attendanceTime() + ' This is not class time! You can give attendance from 07:50 PM to 11:59 PM'
                         })
                     }
                 }
