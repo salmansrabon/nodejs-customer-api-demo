@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const { todaysDate, attendanceTime, checkEmailIsValid } = require('../../utils');
+const { Student } = require('./sequelizeModel/Student');
 
 router.get('/', (req, res, next) => {
     res.status(200).json({
@@ -25,15 +26,21 @@ router.get(apiRoute + '/list', function (req, res) {
 
 });
 
-router.get(apiRoute + '/email/:email', (req, res, next) => {
+router.get(apiRoute + '/email/:email', async (req, res, next) => {
 
     try {
 
         const { email } = req.params;
-        const stuObj = students.find(s => { return s.email === email && s.datetime.includes(String(todaysDate())) })
+        // const stuObj = students.find(s => { return s.email === email && s.datetime.includes(String(todaysDate())) })
+        const stuObj = await Student.findOne({ where: { email } }).then(data => {
+            if (!data) {
+                return false;
+            }
 
+            return data.email === email && data.datetime.includes(String(todaysDate()));
+        });
         const newInfo = {
-            email: req.params.email,
+            email,
             datetime: attendanceTime()
         };
         if (stuObj) {
@@ -42,15 +49,14 @@ router.get(apiRoute + '/email/:email', (req, res, next) => {
             })
         }
         else {
-            if (checkEmailIsValid(req.params.email)) {
+            if (checkEmailIsValid(email)) {
                 const start = 19 * 60 + 50;
                 const end = 23 * 60 + 59;
                 const date = new Date();
-                const now = (date.getHours()+6) * 60 + date.getMinutes();
+                const now = (date.getHours() + 6) * 60 + date.getMinutes();
                 if (date.getDay() == 3 || date.getDay() == 6) {
                     if (start <= now && now <= end) {
-                        students.push(newInfo);
-                        fs.writeFileSync(studentdb, JSON.stringify(students));
+                        await Student.create({ ...newInfo });
                         res.status(201).json({
                             message: "success",
                             Students: newInfo
