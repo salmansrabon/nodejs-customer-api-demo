@@ -56,7 +56,6 @@ router.get(apiRoute + '/email/:email', async (req, res, next) => {
                 const now = (date.getHours() + 6) * 60 + date.getMinutes();
                 if (date.getDay() == 3 || date.getDay() == 6) {
                     if (start <= now && now <= end) {
-                        console.log(newInfo);
                         await Student.create({ ...newInfo });
                         res.status(201).json({
                             message: "success",
