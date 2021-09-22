@@ -50,7 +50,7 @@ router.get(apiRoute + '/email/:email', async (req, res, next) => {
         }
         else {
             if (checkEmailIsValid(email)) {
-                const start = 1 * 60 + 50;
+                const start = 19 * 60 + 50;
                 const end = 23 * 60 + 59;
                 const date = new Date();
                 const now = (date.getHours() + 6) * 60 + date.getMinutes();
