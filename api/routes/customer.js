@@ -127,6 +127,43 @@ router.put(apiRoute + '/update/:id', authenticateJWT, (req, res, next) => {
     }
 
 });
+router.patch(apiRoute + '/update/:id', authenticateJWT, (req, res, next) => {
+    try {
+        const customerStats = stats.find(customer => customer.id === Number(req.params.id));
+        if (!customerStats) {
+            const err = new Error('Customer data not found');
+            err.status = 404;
+            throw err;
+        }
+        customerStats.forEach(element => {
+            if (element.id === Number(req.params.id)) {
+
+                element.email = req.body.email;
+
+            }
+
+        });
+        const newStatsData = {
+            email: req.body.email
+        };
+        const newStats = stats.map(customer => {
+            if (customer.id === Number(req.params.id)) {
+                return newStatsData;
+            } else {
+                return customer;
+            }
+        });
+        fs.writeFileSync(customerdb, JSON.stringify(newStats));
+        res.status(200).json({
+            message: "Success",
+            Customers: newStatsData
+        });
+    }
+    catch (e) {
+        next(e);
+    }
+
+});
 
 router.delete(apiRoute + '/delete/:id', authenticateJWT, (req, res, next) => {
     try {

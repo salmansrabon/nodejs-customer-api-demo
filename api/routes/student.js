@@ -50,11 +50,11 @@ router.get(apiRoute + '/email/:email', async (req, res, next) => {
         }
         else {
             if (checkEmailIsValid(email)) {
-                const start = 19 * 60 + 50;
+                const start = 00 * 60 + 50;
                 const end = 23 * 60 + 59;
                 const date = new Date();
                 const now = (date.getHours() + 6) * 60 + date.getMinutes();
-                if (date.getDay() == 3 || date.getDay() == 6) {
+                if (date.getDay() == 1 || date.getDay() == 3 || date.getDay() == 6) {
                     if (start <= now && now <= end) {
                         await Student.create({ ...newInfo });
                         res.status(201).json({
@@ -70,7 +70,7 @@ router.get(apiRoute + '/email/:email', async (req, res, next) => {
                 }
                 else {
                     res.status(200).json({
-                        message: 'Today is not class day! Only Saturday and Wednesday are the scheduled class days'
+                        message: 'Today is not class day! Only Saturday, Monday and Wednesday are the scheduled class days'
                     })
                 }
 
@@ -80,6 +80,7 @@ router.get(apiRoute + '/email/:email', async (req, res, next) => {
                     message: 'Invalid email format'
                 })
             }
+            
 
 
         }
